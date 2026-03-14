@@ -7,6 +7,7 @@ if (!MONGODB_URI) {
 }
 
 declare global {
+  // eslint-disable-next-line no-var
   var mongooseCache:
     | {
         conn: typeof mongoose | null;
@@ -21,10 +22,12 @@ const cached = global.mongooseCache ?? {
 };
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn;
+  if (cached.conn) {
+    return cached.conn;
+  }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
+    cached.promise = mongoose.connect(MONGODB_URI as string, {
       dbName: "second_brain_app",
     });
   }
