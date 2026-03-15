@@ -2,17 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Note from "@/lib/models/Note";
 
-type Params = {
-  params: Promise<{
-    id: string;
-  }>;
+type RouteContext = {
+  params: Promise<{ id: string }>;
 };
 
-export async function GET(_: Request, { params }: Params) {
+export async function GET(req: NextRequest, context: RouteContext) {
   try {
     await connectDB();
+    const { id } = await context.params;
 
-    const { id } = await params;
     const note = await Note.findById(id);
 
     if (!note) {
@@ -32,25 +30,45 @@ export async function GET(_: Request, { params }: Params) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: Params) {
+export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
     await connectDB();
+    const { id } = await context.params;
 
-    const { id } = await params;
     const body = await req.json();
+    const { title, content, type, tags, sourceUrl, summary } = body;
 
-    const { title, content, type, tags, sourceUrl, summary, aiTags } = body;
+    if (!title || !content || !type) {
+      return NextResponse.json(
+        { success: false, message: "Title, content, and type are required" },
+        { status: 400 }
+      );
+    }
+
+    let validatedUrl = "";
+
+    if (sourceUrl && String(sourceUrl).trim() !== "") {
+      try {
+        validatedUrl = new URL(String(sourceUrl).trim()).toString();
+      } catch {
+        return NextResponse.json(
+          { success: false, message: "Invalid URL format" },
+          { status: 400 }
+        );
+      }
+    }
 
     const updatedNote = await Note.findByIdAndUpdate(
       id,
       {
-        title,
-        content,
+        title: String(title).trim(),
+        content: String(content).trim(),
         type,
-        tags: Array.isArray(tags) ? tags : [],
-        sourceUrl: sourceUrl || "",
-        summary: summary || "",
-        aiTags: Array.isArray(aiTags) ? aiTags : [],
+        tags: Array.isArray(tags)
+          ? tags.map((tag) => String(tag).trim()).filter(Boolean)
+          : [],
+        sourceUrl: validatedUrl,
+        summary: summary ? String(summary).trim() : "",
       },
       { new: true, runValidators: true }
     );
@@ -67,7 +85,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("PUT /api/notes/[id] error:", error);
+    console.error("PATCH /api/notes/[id] error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to update note" },
       { status: 500 }
@@ -75,11 +93,11 @@ export async function PUT(req: NextRequest, { params }: Params) {
   }
 }
 
-export async function DELETE(_: Request, { params }: Params) {
+export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
     await connectDB();
+    const { id } = await context.params;
 
-    const { id } = await params;
     const deletedNote = await Note.findByIdAndDelete(id);
 
     if (!deletedNote) {
