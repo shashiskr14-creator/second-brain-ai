@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Second Brain – Personal Knowledge Management App
 
-## Getting Started
+A modern **personal knowledge management system** that helps users store, search, and organize notes, ideas, and resources efficiently.
 
-First, run the development server:
+The app allows users to create notes, tag information, search across stored knowledge, and access notes through a public API.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+# Live Demo
+
+https://secondbrainapp-q0zm7oiny-shashikanth-reddy-baddams-projects.vercel.app
+
+---
+
+# Features
+
+• Create and store notes
+• Add tags for categorization
+• Search notes instantly
+• AI-generated tags and summaries
+• Clean dashboard UI
+• Public API for querying stored knowledge
+• MongoDB persistent storage
+• Fully deployed on Vercel
+
+---
+
+# Tech Stack
+
+Frontend
+• Next.js 16
+• React
+• TypeScript
+• Tailwind CSS
+
+Backend
+• Next.js API Routes
+
+Database
+• MongoDB
+• Mongoose
+
+Deployment
+• Vercel
+
+---
+
+# Project Structure
+
+```
+app/
+ ├─ api/
+ │   ├─ notes/
+ │   └─ public/brain/query
+ ├─ dashboard/
+ ├─ create-note/
+ └─ docs/
+
+components/
+ ├─ NoteCard.tsx
+ ├─ SearchBar.tsx
+ └─ TypeFilter.tsx
+
+lib/
+ ├─ db.ts
+ └─ models/Note.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Clone the repository
 
-## Learn More
+```
+git clone https://github.com/shashiskr14-creator/second-brain-ai.git
+cd second-brain-ai
+```
 
-To learn more about Next.js, take a look at the following resources:
+Install dependencies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+npm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create environment variables
 
-## Deploy on Vercel
+```
+MONGODB_URI=your_mongodb_connection_string
+OPENAI_API_KEY=your_openai_key
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Run locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+npm run dev
+```
+
+Open
+
+```
+http://localhost:3000
+```
+
+---
+
+# API Endpoints
+
+### Create Note
+
+```
+POST /api/notes
+```
+
+Request Body
+
+```
+{
+"title": "React Hooks Guide",
+"content": "useState and useEffect are important hooks",
+"type": "note",
+"tags": ["react", "hooks"]
+}
+```
+
+---
+
+### Fetch Notes
+
+```
+GET /api/notes
+```
+
+---
+
+### Public Brain Query API
+
+This endpoint allows external applications to query stored knowledge.
+
+```
+GET /api/public/brain/query?q=react
+```
+
+Example response
+
+```
+{
+"success": true,
+"query": "react",
+"results": [
+{
+"title": "React Hooks Guide",
+"tags": ["react","hooks"]
+}
+]
+}
+```
+
+---
+
+# Deployment
+
+The application is deployed on **Vercel**.
+
+Steps used:
+
+1. Push project to GitHub
+2. Connect repository to Vercel
+3. Add environment variables
+4. Deploy automatically
+
+---
+
+# Author
+
+Baddam Shashikanth Reddy
+GitHub: https://github.com/shashiskr14-creator
