@@ -15,24 +15,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Second Brain",
-  description: "Personal knowledge management system",
+  description: "AI-powered knowledge system",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-
-        <main className="mx-auto max-w-6xl px-6 py-10">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   );
