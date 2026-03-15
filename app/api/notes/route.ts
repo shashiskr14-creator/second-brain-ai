@@ -8,17 +8,20 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q");
+    const type = searchParams.get("type");
 
-    let filter: any = {};
+    const filter: any = {};
 
     if (query) {
-      filter = {
-        $or: [
-          { title: { $regex: query, $options: "i" } },
-          { content: { $regex: query, $options: "i" } },
-          { tags: { $regex: query, $options: "i" } },
-        ],
-      };
+      filter.$or = [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+        { tags: { $regex: query, $options: "i" } },
+      ];
+    }
+
+    if (type) {
+      filter.type = type;
     }
 
     const notes = await Note.find(filter).sort({ createdAt: -1 });
@@ -78,10 +81,7 @@ export async function POST(req: NextRequest) {
         : [],
     });
 
-    return NextResponse.json(
-      { success: true, note },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true, note }, { status: 201 });
   } catch (error) {
     console.error("POST /api/notes error:", error);
 

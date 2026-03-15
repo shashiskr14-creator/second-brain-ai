@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Note from "@/lib/models/Note";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
@@ -34,19 +34,24 @@ export async function GET(req: Request) {
       safeNotes.length > 0
         ? safeNotes
             .map((note: any, index: number) => {
-              const summaryText =
+              const preview =
                 note.summary && String(note.summary).trim()
                   ? note.summary
-                  : String(note.content).slice(0, 180) + (String(note.content).length > 180 ? "..." : "");
+                  : String(note.content).slice(0, 180) +
+                    (String(note.content).length > 180 ? "..." : "");
 
-              return `${index + 1}. ${note.title}: ${summaryText}`;
+              return `${index + 1}. ${note.title}: ${preview}`;
             })
             .join("\n")
         : "No matching notes found.";
 
-    const sources = safeNotes.map((note: any) => ({
+    const results = safeNotes.map((note: any) => ({
       id: note._id,
       title: note.title,
+      summary: note.summary || "",
+      contentPreview:
+        String(note.content).slice(0, 180) +
+        (String(note.content).length > 180 ? "..." : ""),
       type: note.type,
       tags: note.tags || [],
       sourceUrl: note.sourceUrl || "",
@@ -58,7 +63,7 @@ export async function GET(req: Request) {
         success: true,
         query: q,
         answer,
-        sources,
+        results,
       },
       { status: 200 }
     );

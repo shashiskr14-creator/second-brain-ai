@@ -1,53 +1,73 @@
 import Link from "next/link";
 
-type Note = {
+interface Note {
   _id: string;
   title: string;
   content: string;
-  type: "note" | "link" | "insight";
-  tags: string[];
+  summary?: string;
+  tags?: string[];
+  type: string;
   sourceUrl?: string;
-  createdAt: string;
-};
+  createdAt?: string;
+}
 
 export default function NoteCard({ note }: { note: Note }) {
   return (
-    <Link href={`/item/${note._id}`}>
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-        <div className="mb-3 flex items-center justify-between">
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium uppercase tracking-wide text-gray-700">
+    <div className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
             {note.type}
           </span>
-          <span className="text-xs text-gray-500">
-            {new Date(note.createdAt).toLocaleDateString()}
-          </span>
+
+          <h2 className="mt-4 text-2xl font-semibold leading-snug text-slate-900">
+            {note.title}
+          </h2>
         </div>
 
-        <h2 className="mb-2 text-xl font-semibold text-gray-900">{note.title}</h2>
-
-        <p className="mb-4 line-clamp-3 text-sm text-gray-600">
-          {note.content}
-        </p>
-
-        {note.tags?.length > 0 && (
-          <div className="mb-4 flex flex-wrap gap-2">
-            {note.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-black/5 px-3 py-1 text-xs text-gray-700"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {note.sourceUrl && (
-          <span className="text-sm font-medium text-black underline">
-            View Details
+        {note.createdAt && (
+          <span className="text-xs font-medium text-slate-400">
+            {new Date(note.createdAt).toLocaleDateString()}
           </span>
         )}
       </div>
-    </Link>
+
+      <p className="mt-4 line-clamp-4 leading-7 text-slate-600">
+        {note.summary || note.content}
+      </p>
+
+      {note.tags && note.tags.length > 0 && (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {note.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-6 flex items-center justify-between">
+        <Link
+          href={`/item/${note._id}`}
+          className="text-sm font-semibold text-slate-900 transition hover:underline"
+        >
+          View Details →
+        </Link>
+
+        {note.sourceUrl && (
+          <a
+            href={note.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm font-medium text-slate-500 transition hover:text-slate-900 hover:underline"
+          >
+            Source
+          </a>
+        )}
+      </div>
+    </div>
   );
 }
