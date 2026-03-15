@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 html {
   scroll-behavior: smooth;
@@ -8,5 +6,5 @@ html {
 
 body {
   color: #0f172a;
-  background: #ffffff;
+  background: #f8fafc;
 }
