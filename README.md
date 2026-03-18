@@ -8,7 +8,7 @@ The app allows users to create notes, tag information, search across stored know
 
 # Live Demo
 
-https://secondbrainapp-q0zm7oiny-shashikanth-reddy-baddams-projects.vercel.app
+https://secondbrainapp-zeta.vercel.app
 
 ---
 
